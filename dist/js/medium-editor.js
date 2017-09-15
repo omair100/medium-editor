@@ -5290,7 +5290,7 @@ MediumEditor.extensions = {};
             MediumEditor.Extension.prototype.init.apply(this, arguments);
 
             if (this.forcePlainText || this.cleanPastedHTML) {
-                this.subscribe('editableKeydown', this.handleKeydown.bind(this));
+                //this.subscribe('editableKeydown', this.handleKeydown.bind(this));
                 // We need access to the full event data in paste
                 // so we can't use the editablePaste event here
                 this.getEditorElements().forEach(function (element) {
@@ -6935,7 +6935,7 @@ MediumEditor.extensions = {};
         for (var i = 0, n = atts.length; i < n; i++) {
             // do not re-create existing attributes
             if (!div.hasAttribute(atts[i].nodeName)) {
-                div.setAttribute(atts[i].nodeName, atts[i].nodeValue);
+                div.setAttribute(atts[i].nodeName, atts[i].value);
             }
         }
 
