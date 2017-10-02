@@ -2777,9 +2777,19 @@ MediumEditor.extensions = {};
                 // If element has focus, and focus is going outside of editor
                 // Don't blur focused element if clicking on editor, toolbar, or anchorpreview
                 if (hadFocus && externalEvent) {
-                    // Trigger blur on the editable that has lost focus
-                    hadFocus.removeAttribute('data-medium-focused');
-                    this.triggerCustomEvent('blur', eventObj, hadFocus);
+                    //console.log(selection);
+                    if (this.options.shadowRoot.Ua !== 'ShadyRoot') {
+                        setTimeout(function () {
+                            var selection = this.options.shadowRoot.getSelection();
+                            if (selection.type !== 'Range') {
+                                hadFocus.removeAttribute('data-medium-focused');
+                                this.triggerCustomEvent('blur', eventObj, hadFocus);
+                            }
+                        }.bind(this), 0);
+                    } else {
+                        hadFocus.removeAttribute('data-medium-focused');
+                        this.triggerCustomEvent('blur', eventObj, hadFocus);
+                    }
                 }
 
                 // If focus is going into an editor element
@@ -5848,7 +5858,13 @@ MediumEditor.extensions = {};
 
         setToolbarPosition: function () {
             var container = this.base.getFocusedElement(),
+                selection = null;
+
+            if (this.base.options.shadowRoot.Ua !== 'ShadyRoot') {
+                selection = this.base.options.shadowRoot.getSelection();
+            } else {
                 selection = this.window.getSelection();
+            }
 
             // If there isn't a valid selection, bail
             if (!container) {
@@ -5934,7 +5950,8 @@ MediumEditor.extensions = {};
             this.getToolbarElement().style.right = 'initial';
 
             var range = selection.getRangeAt(0),
-                boundary = range.getBoundingClientRect();
+                boundary = range.getBoundingClientRect(),
+                element = this.base.options.elementsContainer.getBoundingClientRect();
 
             // Handle selections with just images
             if (!boundary || ((boundary.height === 0 && boundary.width === 0) && range.startContainer === range.endContainer)) {
@@ -5953,16 +5970,18 @@ MediumEditor.extensions = {};
                 toolbarWidth = toolbarElement.offsetWidth,
                 halfOffsetWidth = toolbarWidth / 2,
                 buttonHeight = 50,
-                defaultLeft = this.diffLeft - halfOffsetWidth;
+                defaultLeft = this.diffLeft - halfOffsetWidth - element.left;
 
             if (boundary.top < buttonHeight) {
                 toolbarElement.classList.add('medium-toolbar-arrow-over');
                 toolbarElement.classList.remove('medium-toolbar-arrow-under');
-                toolbarElement.style.top = buttonHeight + boundary.bottom - this.diffTop + this.window.pageYOffset - toolbarHeight + 'px';
+                toolbarElement.style.top = buttonHeight + boundary.bottom - this.diffTop + this.window.pageYOffset - toolbarHeight - element.top - this.window.scrollY + 'px';
+                //toolbarElement.style.top = - boundary.top + 'px';
             } else {
                 toolbarElement.classList.add('medium-toolbar-arrow-under');
                 toolbarElement.classList.remove('medium-toolbar-arrow-over');
-                toolbarElement.style.top = boundary.top + this.diffTop + this.window.pageYOffset - toolbarHeight + 'px';
+                toolbarElement.style.top = boundary.top + this.diffTop + this.window.pageYOffset - toolbarHeight - element.top - this.window.scrollY + 'px';
+                //toolbarElement.style.top = - boundary.top + 'px';
             }
 
             if (middleBoundary < halfOffsetWidth) {

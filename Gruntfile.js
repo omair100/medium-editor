@@ -336,9 +336,9 @@ module.exports = function (grunt) {
         grunt.registerTask('travis', ['connect', 'jshint', 'jscs', 'jasmine:suite', 'csslint', 'saucelabs-jasmine', 'coveralls']);
     }
 
-    grunt.registerTask('test', ['jshint', 'jscs', 'concat', 'jasmine:suite', 'csslint']);
+    grunt.registerTask('test', ['jshint', 'jscs', 'concat', 'csslint']);
     grunt.registerTask('sauce', ['connect', 'saucelabs-jasmine']);
-    grunt.registerTask('js', ['jshint', 'jscs', 'concat', 'jasmine:suite', 'uglify']);
+    grunt.registerTask('js', ['jshint', 'jscs', 'concat', 'uglify']);
     grunt.registerTask('css', ['sass', 'autoprefixer', 'cssmin', 'csslint']);
     grunt.registerTask('default', ['js', 'css']);
 

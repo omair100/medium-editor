@@ -514,7 +514,13 @@
 
         setToolbarPosition: function () {
             var container = this.base.getFocusedElement(),
+                selection = null;
+
+            if (this.base.options.shadowRoot.Ua !== 'ShadyRoot') {
+                selection = this.base.options.shadowRoot.getSelection();
+            } else {
                 selection = this.window.getSelection();
+            }
 
             // If there isn't a valid selection, bail
             if (!container) {
@@ -600,7 +606,8 @@
             this.getToolbarElement().style.right = 'initial';
 
             var range = selection.getRangeAt(0),
-                boundary = range.getBoundingClientRect();
+                boundary = range.getBoundingClientRect(),
+                element = this.base.options.elementsContainer.getBoundingClientRect();
 
             // Handle selections with just images
             if (!boundary || ((boundary.height === 0 && boundary.width === 0) && range.startContainer === range.endContainer)) {
@@ -619,16 +626,18 @@
                 toolbarWidth = toolbarElement.offsetWidth,
                 halfOffsetWidth = toolbarWidth / 2,
                 buttonHeight = 50,
-                defaultLeft = this.diffLeft - halfOffsetWidth;
+                defaultLeft = this.diffLeft - halfOffsetWidth - element.left;
 
             if (boundary.top < buttonHeight) {
                 toolbarElement.classList.add('medium-toolbar-arrow-over');
                 toolbarElement.classList.remove('medium-toolbar-arrow-under');
-                toolbarElement.style.top = buttonHeight + boundary.bottom - this.diffTop + this.window.pageYOffset - toolbarHeight + 'px';
+                toolbarElement.style.top = buttonHeight + boundary.bottom - this.diffTop + this.window.pageYOffset - toolbarHeight - element.top - this.window.scrollY + 'px';
+                //toolbarElement.style.top = - boundary.top + 'px';
             } else {
                 toolbarElement.classList.add('medium-toolbar-arrow-under');
                 toolbarElement.classList.remove('medium-toolbar-arrow-over');
-                toolbarElement.style.top = boundary.top + this.diffTop + this.window.pageYOffset - toolbarHeight + 'px';
+                toolbarElement.style.top = boundary.top + this.diffTop + this.window.pageYOffset - toolbarHeight - element.top - this.window.scrollY + 'px';
+                //toolbarElement.style.top = - boundary.top + 'px';
             }
 
             if (middleBoundary < halfOffsetWidth) {

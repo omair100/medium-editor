@@ -375,9 +375,19 @@
                 // If element has focus, and focus is going outside of editor
                 // Don't blur focused element if clicking on editor, toolbar, or anchorpreview
                 if (hadFocus && externalEvent) {
-                    // Trigger blur on the editable that has lost focus
-                    hadFocus.removeAttribute('data-medium-focused');
-                    this.triggerCustomEvent('blur', eventObj, hadFocus);
+                    //console.log(selection);
+                    if (this.options.shadowRoot.Ua !== 'ShadyRoot') {
+                        setTimeout(function () {
+                            var selection = this.options.shadowRoot.getSelection();
+                            if (selection.type !== 'Range') {
+                                hadFocus.removeAttribute('data-medium-focused');
+                                this.triggerCustomEvent('blur', eventObj, hadFocus);
+                            }
+                        }.bind(this), 0);
+                    } else {
+                        hadFocus.removeAttribute('data-medium-focused');
+                        this.triggerCustomEvent('blur', eventObj, hadFocus);
+                    }
                 }
 
                 // If focus is going into an editor element
