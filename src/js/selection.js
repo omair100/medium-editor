@@ -463,11 +463,11 @@
 
         // determine if the current selection contains any 'content'
         // content being any non-white space text or an image
-        selectionContainsContent: function (doc) {
+        selectionContainsContent: function (doc, selectionNode) {
             var sel = doc.getSelection();
 
             // collapsed selection or selection withour range doesn't contain content
-            if (!sel || sel.isCollapsed || !sel.rangeCount) {
+            if (!sel || !sel.rangeCount) {
                 return false;
             }
 
@@ -478,10 +478,10 @@
 
             // if selection contains only image(s), it will return empty for toString()
             // so check for an image manually
-            var selectionNode = this.getSelectedParentElement(sel.getRangeAt(0));
-            if (selectionNode) {
-                if (selectionNode.nodeName.toLowerCase() === 'img' ||
-                    (selectionNode.nodeType === 1 && selectionNode.querySelector('img'))) {
+            var selectionNode2 = selectionNode || this.getSelectedParentElement(sel.getRangeAt(0));
+            if (selectionNode2) {
+                if (selectionNode2.nodeName.toLowerCase() === 'img' ||
+                    (selectionNode2.nodeType === 1 && selectionNode2.querySelector('img'))) {
                     return true;
                 }
             }

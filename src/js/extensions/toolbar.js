@@ -400,7 +400,8 @@
             // If there's no selection element, selection element doesn't belong to this editor
             // or toolbar is disabled for this selection element
             // hide toolbar
-            var selectionElement = MediumEditor.selection.getSelectionElement(this.window);
+            //var selectionElement = MediumEditor.selection.getSelectionElement(this.window);
+            var selectionElement = this.base.getFocusedElement();
             if (!selectionElement ||
                     this.getEditorElements().indexOf(selectionElement) === -1 ||
                     selectionElement.getAttribute('data-disable-toolbar')) {
@@ -415,7 +416,7 @@
             }
 
             // If we don't have a 'valid' selection -> hide toolbar
-            if (!MediumEditor.selection.selectionContainsContent(this.document) ||
+            if (!MediumEditor.selection.selectionContainsContent(this.document, selectionElement) ||
                 (this.allowMultiParagraphSelection === false && this.multipleBlockElementsSelected())) {
                 return this.hideToolbar();
             }
@@ -527,7 +528,7 @@
                 return this;
             }
 
-            if (this.static || !selection.isCollapsed) {
+            if (this.static || selection) {
                 this.showToolbar();
 
                 // we don't need any absolute positioning if relativeContainer is set

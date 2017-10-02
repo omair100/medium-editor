@@ -236,6 +236,9 @@
                     this.attachDOMEvent(this.options.ownerDocument.body, 'mousedown', this.handleBodyMousedown.bind(this), true);
                     this.attachDOMEvent(this.options.ownerDocument.body, 'click', this.handleBodyClick.bind(this), true);
                     this.attachDOMEvent(this.options.ownerDocument.body, 'focus', this.handleBodyFocus.bind(this), true);
+                    this.attachDOMEvent(this.options.elementsContainer, 'mousedown', this.handleBodyMousedown.bind(this), true);
+                    this.attachDOMEvent(this.options.elementsContainer, 'click', this.handleBodyClick.bind(this), true);
+                    this.attachDOMEvent(this.options.elementsContainer, 'focus', this.handleBodyFocus.bind(this), true);
                     break;
                 case 'blur':
                     // Detecting when focus is lost

@@ -2188,11 +2188,11 @@ MediumEditor.extensions = {};
 
         // determine if the current selection contains any 'content'
         // content being any non-white space text or an image
-        selectionContainsContent: function (doc) {
+        selectionContainsContent: function (doc, selectionNode) {
             var sel = doc.getSelection();
 
             // collapsed selection or selection withour range doesn't contain content
-            if (!sel || sel.isCollapsed || !sel.rangeCount) {
+            if (!sel || !sel.rangeCount) {
                 return false;
             }
 
@@ -2203,10 +2203,10 @@ MediumEditor.extensions = {};
 
             // if selection contains only image(s), it will return empty for toString()
             // so check for an image manually
-            var selectionNode = this.getSelectedParentElement(sel.getRangeAt(0));
-            if (selectionNode) {
-                if (selectionNode.nodeName.toLowerCase() === 'img' ||
-                    (selectionNode.nodeType === 1 && selectionNode.querySelector('img'))) {
+            var selectionNode2 = selectionNode || this.getSelectedParentElement(sel.getRangeAt(0));
+            if (selectionNode2) {
+                if (selectionNode2.nodeName.toLowerCase() === 'img' ||
+                    (selectionNode2.nodeType === 1 && selectionNode2.querySelector('img'))) {
                     return true;
                 }
             }
@@ -2638,6 +2638,9 @@ MediumEditor.extensions = {};
                     this.attachDOMEvent(this.options.ownerDocument.body, 'mousedown', this.handleBodyMousedown.bind(this), true);
                     this.attachDOMEvent(this.options.ownerDocument.body, 'click', this.handleBodyClick.bind(this), true);
                     this.attachDOMEvent(this.options.ownerDocument.body, 'focus', this.handleBodyFocus.bind(this), true);
+                    this.attachDOMEvent(this.options.elementsContainer, 'mousedown', this.handleBodyMousedown.bind(this), true);
+                    this.attachDOMEvent(this.options.elementsContainer, 'click', this.handleBodyClick.bind(this), true);
+                    this.attachDOMEvent(this.options.elementsContainer, 'focus', this.handleBodyFocus.bind(this), true);
                     break;
                 case 'blur':
                     // Detecting when focus is lost
@@ -5744,7 +5747,8 @@ MediumEditor.extensions = {};
             // If there's no selection element, selection element doesn't belong to this editor
             // or toolbar is disabled for this selection element
             // hide toolbar
-            var selectionElement = MediumEditor.selection.getSelectionElement(this.window);
+            //var selectionElement = MediumEditor.selection.getSelectionElement(this.window);
+            var selectionElement = this.base.getFocusedElement();
             if (!selectionElement ||
                     this.getEditorElements().indexOf(selectionElement) === -1 ||
                     selectionElement.getAttribute('data-disable-toolbar')) {
@@ -5759,7 +5763,7 @@ MediumEditor.extensions = {};
             }
 
             // If we don't have a 'valid' selection -> hide toolbar
-            if (!MediumEditor.selection.selectionContainsContent(this.document) ||
+            if (!MediumEditor.selection.selectionContainsContent(this.document, selectionElement) ||
                 (this.allowMultiParagraphSelection === false && this.multipleBlockElementsSelected())) {
                 return this.hideToolbar();
             }
@@ -5871,7 +5875,7 @@ MediumEditor.extensions = {};
                 return this;
             }
 
-            if (this.static || !selection.isCollapsed) {
+            if (this.static || selection) {
                 this.showToolbar();
 
                 // we don't need any absolute positioning if relativeContainer is set
