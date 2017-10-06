@@ -506,9 +506,9 @@
             return res;
         },
 
-        execFormatBlock: function (doc, tagName) {
+        execFormatBlock: function (doc, tagName, selectionDoc) {
             // Get the top level block element that contains the selection
-            var blockContainer = Util.getTopBlockContainer(MediumEditor.selection.getSelectionStart(doc)),
+            var blockContainer = Util.getTopBlockContainer(MediumEditor.selection.getSelectionStart(selectionDoc)),
                 childNodes;
 
             // Special handling for blockquote

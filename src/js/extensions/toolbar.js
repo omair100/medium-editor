@@ -448,7 +448,7 @@
         checkActiveButtons: function () {
             var manualStateChecks = [],
                 queryState = null,
-                selectionRange = MediumEditor.selection.getSelectionRange(this.document),
+                selectionRange,
                 parentNode,
                 updateExtensionState = function (extension) {
                     if (typeof extension.checkState === 'function') {
@@ -461,6 +461,12 @@
                         }
                     }
                 };
+
+            if (this.base.options.shadowRoot.Ua !== 'ShadyRoot') {
+                selectionRange = MediumEditor.selection.getSelectionRange(this.base.options.shadowRoot);
+            } else {
+                selectionRange = MediumEditor.selection.getSelectionRange(this.document);
+            }
 
             if (!selectionRange) {
                 return;

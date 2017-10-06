@@ -137,7 +137,8 @@
             // when cursor is at the begining of the element and the element is <blockquote>
             // then pressing backspace key should change the <blockquote> to a <p> tag
             event.preventDefault();
-            MediumEditor.util.execFormatBlock(this.options.ownerDocument, 'p');
+            var selectionDoc = (this.options.shadowRoot.Ua !== 'ShadyRoot') ? this.options.shadowRoot : this.options.ownerDocument;
+            MediumEditor.util.execFormatBlock(this.options.ownerDocument, 'p', selectionDoc);
         }
     }
 
@@ -504,7 +505,9 @@
         // type of block element (ie append-blockquote, append-h1, append-pre, etc.)
         match = appendAction.exec(action);
         if (match) {
-            return MediumEditor.util.execFormatBlock(this.options.ownerDocument, match[1]);
+            var selectionDoc = (this.options.shadowRoot.Ua !== 'ShadyRoot') ? this.options.shadowRoot : this.options.ownerDocument;
+
+            return MediumEditor.util.execFormatBlock(this.options.ownerDocument, match[1], selectionDoc);
         }
 
         if (action === 'fontSize') {

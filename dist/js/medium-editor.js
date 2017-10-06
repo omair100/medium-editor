@@ -911,9 +911,9 @@ MediumEditor.extensions = {};
             return res;
         },
 
-        execFormatBlock: function (doc, tagName) {
+        execFormatBlock: function (doc, tagName, selectionDoc) {
             // Get the top level block element that contains the selection
-            var blockContainer = Util.getTopBlockContainer(MediumEditor.selection.getSelectionStart(doc)),
+            var blockContainer = Util.getTopBlockContainer(MediumEditor.selection.getSelectionStart(selectionDoc)),
                 childNodes;
 
             // Special handling for blockquote
@@ -5795,7 +5795,7 @@ MediumEditor.extensions = {};
         checkActiveButtons: function () {
             var manualStateChecks = [],
                 queryState = null,
-                selectionRange = MediumEditor.selection.getSelectionRange(this.document),
+                selectionRange,
                 parentNode,
                 updateExtensionState = function (extension) {
                     if (typeof extension.checkState === 'function') {
@@ -5808,6 +5808,12 @@ MediumEditor.extensions = {};
                         }
                     }
                 };
+
+            if (this.base.options.shadowRoot.Ua !== 'ShadyRoot') {
+                selectionRange = MediumEditor.selection.getSelectionRange(this.base.options.shadowRoot);
+            } else {
+                selectionRange = MediumEditor.selection.getSelectionRange(this.document);
+            }
 
             if (!selectionRange) {
                 return;
@@ -6203,7 +6209,8 @@ MediumEditor.extensions = {};
             // when cursor is at the begining of the element and the element is <blockquote>
             // then pressing backspace key should change the <blockquote> to a <p> tag
             event.preventDefault();
-            MediumEditor.util.execFormatBlock(this.options.ownerDocument, 'p');
+            var selectionDoc = (this.options.shadowRoot.Ua !== 'ShadyRoot') ? this.options.shadowRoot : this.options.ownerDocument;
+            MediumEditor.util.execFormatBlock(this.options.ownerDocument, 'p', selectionDoc);
         }
     }
 
@@ -6570,7 +6577,9 @@ MediumEditor.extensions = {};
         // type of block element (ie append-blockquote, append-h1, append-pre, etc.)
         match = appendAction.exec(action);
         if (match) {
-            return MediumEditor.util.execFormatBlock(this.options.ownerDocument, match[1]);
+            var selectionDoc = (this.options.shadowRoot.Ua !== 'ShadyRoot') ? this.options.shadowRoot : this.options.ownerDocument;
+
+            return MediumEditor.util.execFormatBlock(this.options.ownerDocument, match[1], selectionDoc);
         }
 
         if (action === 'fontSize') {
