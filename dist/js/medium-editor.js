@@ -6227,7 +6227,9 @@ MediumEditor.extensions = {};
     }
 
     function handleKeyup(event) {
-        var node = MediumEditor.selection.getSelectionStart(this.options.ownerDocument),
+
+        var selectionDoc = (this.options.shadowRoot.Ua !== 'ShadyRoot') ? this.options.shadowRoot : this.options.ownerDocument,
+            node = MediumEditor.selection.getSelectionStart(selectionDoc),
             tagName;
 
         if (!node) {
