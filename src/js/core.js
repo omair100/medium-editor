@@ -144,11 +144,8 @@
 
     function handleKeyup(event) {
 
-        var selectionDoc = (this.options.shadowRoot.Ua !== 'ShadyRoot') ? this.options.shadowRoot : this.options.ownerDocument;
-        
-        var node = MediumEditor.selection.getSelectionStart(selectionDoc),
-
-        var node = MediumEditor.selection.getSelectionStart(this.options.ownerDocument),
+        var selectionDoc = (this.options.shadowRoot.Ua !== 'ShadyRoot') ? this.options.shadowRoot : this.options.ownerDocument,
+            node = MediumEditor.selection.getSelectionStart(selectionDoc),
             tagName;
 
         if (!node) {
