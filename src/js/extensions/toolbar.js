@@ -462,7 +462,7 @@
                     }
                 };
 
-            if (this.base.options.shadowRoot.Ua !== 'ShadyRoot') {
+            if (this.base.options.shadowRoot.Ua !== 'ShadyRoot' && this.base.options.shadowRoot.Wa !== 'ShadyRoot') {
                 selectionRange = MediumEditor.selection.getSelectionRange(this.base.options.shadowRoot);
             } else {
                 selectionRange = MediumEditor.selection.getSelectionRange(this.document);
@@ -523,7 +523,7 @@
             var container = this.base.getFocusedElement(),
                 selection = null;
 
-            if (this.base.options.shadowRoot.Ua !== 'ShadyRoot') {
+            if (this.base.options.shadowRoot.Ua !== 'ShadyRoot' && this.base.options.shadowRoot.Wa !== 'ShadyRoot') {
                 selection = this.base.options.shadowRoot.getSelection();
             } else {
                 selection = this.window.getSelection();
