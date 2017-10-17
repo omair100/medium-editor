@@ -379,7 +379,7 @@
                 // Don't blur focused element if clicking on editor, toolbar, or anchorpreview
                 if (hadFocus && externalEvent) {
                     //console.log(selection);
-                    if (this.options.shadowRoot.Ua !== 'ShadyRoot' && this.options.shadowRoot.Wa !== 'ShadyRoot') {
+                    if (this.options.shadowRoot.Ma !== 'ShadyRoot' && this.options.shadowRoot.Wa !== 'ShadyRoot') {
                         setTimeout(function () {
                             var selection = this.options.shadowRoot.getSelection();
                             if (selection.type !== 'Range') {
