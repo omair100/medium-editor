@@ -2781,7 +2781,7 @@ MediumEditor.extensions = {};
                 // Don't blur focused element if clicking on editor, toolbar, or anchorpreview
                 if (hadFocus && externalEvent) {
                     //console.log(selection);
-                    if (this.options.shadowRoot.Ma !== 'ShadyRoot' && this.options.shadowRoot.Wa !== 'ShadyRoot') {
+                    if (this.options.shadowRoot.Ua !== 'ShadyRoot' && this.options.shadowRoot.eb !== 'ShadyRoot') {
                         setTimeout(function () {
                             var selection = this.options.shadowRoot.getSelection();
                             if (selection.type !== 'Range') {
@@ -5821,7 +5821,7 @@ MediumEditor.extensions = {};
                     }
                 };
 
-            if (this.base.options.shadowRoot.Ma !== 'ShadyRoot' && this.base.options.shadowRoot.Wa !== 'ShadyRoot') {
+            if (this.base.options.shadowRoot.Ua !== 'ShadyRoot' && this.base.options.shadowRoot.eb !== 'ShadyRoot') {
                 selectionRange = MediumEditor.selection.getSelectionRange(this.base.options.shadowRoot);
             } else {
                 selectionRange = MediumEditor.selection.getSelectionRange(this.document);
@@ -5882,7 +5882,7 @@ MediumEditor.extensions = {};
             var container = this.base.getFocusedElement(),
                 selection = null;
 
-            if (this.base.options.shadowRoot.Ma !== 'ShadyRoot' && this.base.options.shadowRoot.Wa !== 'ShadyRoot') {
+            if (this.base.options.shadowRoot.Ua !== 'ShadyRoot' && this.base.options.shadowRoot.eb !== 'ShadyRoot') {
                 selection = this.base.options.shadowRoot.getSelection();
             } else {
                 selection = this.window.getSelection();
@@ -6221,14 +6221,14 @@ MediumEditor.extensions = {};
             // when cursor is at the begining of the element and the element is <blockquote>
             // then pressing backspace key should change the <blockquote> to a <p> tag
             event.preventDefault();
-            var selectionDoc = (this.options.shadowRoot.Ma !== 'ShadyRoot' && this.options.shadowRoot.Wa !== 'ShadyRoot') ? this.options.shadowRoot : this.options.ownerDocument;
+            var selectionDoc = (this.options.shadowRoot.Ua !== 'ShadyRoot' && this.options.shadowRoot.eb !== 'ShadyRoot') ? this.options.shadowRoot : this.options.ownerDocument;
             MediumEditor.util.execFormatBlock(this.options.ownerDocument, 'p', selectionDoc);
         }
     }
 
     function handleKeyup(event) {
 
-        var selectionDoc = (this.options.shadowRoot.Ma !== 'ShadyRoot' && this.options.shadowRoot.Wa !== 'ShadyRoot') ? this.options.shadowRoot : this.options.ownerDocument,
+        var selectionDoc = (this.options.shadowRoot.Ua !== 'ShadyRoot' && this.options.shadowRoot.eb !== 'ShadyRoot') ? this.options.shadowRoot : this.options.ownerDocument,
             node = MediumEditor.selection.getSelectionStart(selectionDoc),
             tagName;
 
@@ -6591,7 +6591,7 @@ MediumEditor.extensions = {};
         // type of block element (ie append-blockquote, append-h1, append-pre, etc.)
         match = appendAction.exec(action);
         if (match) {
-            var selectionDoc = (this.options.shadowRoot.Ma !== 'ShadyRoot' && this.options.shadowRoot.Wa !== 'ShadyRoot') ? this.options.shadowRoot : this.options.ownerDocument;
+            var selectionDoc = (this.options.shadowRoot.Ua !== 'ShadyRoot' && this.options.shadowRoot.eb !== 'ShadyRoot') ? this.options.shadowRoot : this.options.ownerDocument;
 
             return MediumEditor.util.execFormatBlock(this.options.ownerDocument, match[1], selectionDoc);
         }
