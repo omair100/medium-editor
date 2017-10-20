@@ -6088,9 +6088,10 @@ MediumEditor.extensions = {};
     // Event handlers that shouldn't be exposed externally
 
     function handleDisableExtraSpaces(event) {
-        var node = MediumEditor.selection.getSelectionStart(this.options.ownerDocument),
+        var selectionDoc = (this.options.shadowRoot.Ua !== 'ShadyRoot' && this.options.shadowRoot.eb !== 'ShadyRoot') ? this.options.shadowRoot : this.options.ownerDocument,
+            node = MediumEditor.selection.getSelectionStart(selectionDoc),
             textContent = node.textContent,
-            caretPositions = MediumEditor.selection.getCaretOffsets(node);
+            caretPositions = MediumEditor.selection.getCaretOffsets(node, selectionDoc.getSelection().getRangeAt(0));
 
         if ((textContent[caretPositions.left - 1] === undefined) || (textContent[caretPositions.left - 1].trim() === '') || (textContent[caretPositions.left] !== undefined && textContent[caretPositions.left].trim() === '')) {
             event.preventDefault();
