@@ -913,11 +913,11 @@
         // instance of MediumEditor's elements
         exportSelection: function () {
             var selectionElement = MediumEditor.selection.getSelectionElement(this.options.shadowRoot),
-                selectionState = null;
-            var owner = (this.options.shadowRoot.Ua !== 'ShadyRoot' && this.options.shadowRoot.eb !== 'ShadyRoot') ? this.options.shadowRoot : this.options.ownerDocument;
+                selectionState = null,
+                owner = (this.options.shadowRoot.Ua !== 'ShadyRoot' && this.options.shadowRoot.eb !== 'ShadyRoot') ? this.options.shadowRoot : this.options.ownerDocument;
 
             selectionState = MediumEditor.selection.exportSelection(selectionElement, owner);
-            
+
             return selectionState;
         },
 

@@ -57,9 +57,8 @@
             event.preventDefault();
             event.stopPropagation();
 
-            var selectionDoc = (this.base.options.shadowRoot.Ua !== 'ShadyRoot' && this.base.options.shadowRoot.eb !== 'ShadyRoot') ? this.base.options.shadowRoot : this.document;
-
-            var range = MediumEditor.selection.getSelectionRange(selectionDoc);
+            var selectionDoc = (this.base.options.shadowRoot.Ua !== 'ShadyRoot' && this.base.options.shadowRoot.eb !== 'ShadyRoot') ? this.base.options.shadowRoot : this.document,
+                range = MediumEditor.selection.getSelectionRange(selectionDoc);
 
             if (range.startContainer.nodeName.toLowerCase() === 'a' ||
                 range.endContainer.nodeName.toLowerCase() === 'a' ||

@@ -3609,7 +3609,8 @@ MediumEditor.extensions = {};
             event.preventDefault();
             event.stopPropagation();
 
-            var range = MediumEditor.selection.getSelectionRange(this.document);
+            var selectionDoc = (this.base.options.shadowRoot.Ua !== 'ShadyRoot' && this.base.options.shadowRoot.eb !== 'ShadyRoot') ? this.base.options.shadowRoot : this.document,
+                range = MediumEditor.selection.getSelectionRange(selectionDoc);
 
             if (range.startContainer.nodeName.toLowerCase() === 'a' ||
                 range.endContainer.nodeName.toLowerCase() === 'a' ||
@@ -3781,6 +3782,7 @@ MediumEditor.extensions = {};
             this.base.restoreSelection();
             this.execAction(this.action, opts);
             this.base.checkSelection();
+            this.hideForm();
         },
 
         checkLinkFormat: function (value) {
@@ -3799,6 +3801,7 @@ MediumEditor.extensions = {};
         },
 
         doFormCancel: function () {
+            this.hideForm();
             this.base.restoreSelection();
             this.base.checkSelection();
         },
@@ -3810,16 +3813,10 @@ MediumEditor.extensions = {};
                 input = form.querySelector('.medium-editor-toolbar-input');
 
             // Handle clicks on the form itself
-            this.on(form, 'click', this.handleFormClick.bind(this));
-
-            // Handle typing in the textbox
-            this.on(input, 'keyup', this.handleTextboxKeyup.bind(this));
-
-            // Handle close button clicks
-            this.on(close, 'click', this.handleCloseClick.bind(this));
-
-            // Handle save button clicks (capture)
-            this.on(save, 'click', this.handleSaveClick.bind(this), true);
+            form.addEventListener('click', this.handleFormClick.bind(this));
+            close.addEventListener('click', this.handleCloseClick.bind(this));
+            input.addEventListener('keyup', this.handleTextboxKeyup.bind(this));
+            save.addEventListener('click', this.handleSaveClick.bind(this));
 
         },
 
@@ -6996,17 +6993,11 @@ MediumEditor.extensions = {};
         // Export the state of the selection in respect to one of this
         // instance of MediumEditor's elements
         exportSelection: function () {
-            var selectionElement = MediumEditor.selection.getSelectionElement(this.options.contentWindow),
-                editableElementIndex = this.elements.indexOf(selectionElement),
-                selectionState = null;
+            var selectionElement = MediumEditor.selection.getSelectionElement(this.options.shadowRoot),
+                selectionState = null,
+                owner = (this.options.shadowRoot.Ua !== 'ShadyRoot' && this.options.shadowRoot.eb !== 'ShadyRoot') ? this.options.shadowRoot : this.options.ownerDocument;
 
-            if (editableElementIndex >= 0) {
-                selectionState = MediumEditor.selection.exportSelection(selectionElement, this.options.ownerDocument);
-            }
-
-            if (selectionState !== null && editableElementIndex !== 0) {
-                selectionState.editableElementIndex = editableElementIndex;
-            }
+            selectionState = MediumEditor.selection.exportSelection(selectionElement, owner);
 
             return selectionState;
         },
