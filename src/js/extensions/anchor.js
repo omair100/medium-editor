@@ -261,10 +261,17 @@
                 input = form.querySelector('.medium-editor-toolbar-input');
 
             // Handle clicks on the form itself
-            form.addEventListener('click', this.handleFormClick.bind(this));
-            close.addEventListener('click', this.handleCloseClick.bind(this));
-            input.addEventListener('keyup', this.handleTextboxKeyup.bind(this));
-            save.addEventListener('click', this.handleSaveClick.bind(this));
+            if (this.base.options.shadowRoot.Ua !== 'ShadyRoot' && this.base.options.shadowRoot.eb !== 'ShadyRoot') {
+                form.addEventListener('click', this.handleFormClick.bind(this));
+                close.addEventListener('click', this.handleCloseClick.bind(this));
+                input.addEventListener('keyup', this.handleTextboxKeyup.bind(this));
+                save.addEventListener('click', this.handleSaveClick.bind(this));
+            } else {
+                this.on(form, 'click', this.handleFormClick.bind(this));
+                this.on(input, 'keyup', this.handleTextboxKeyup.bind(this));
+                this.on(close, 'click', this.handleCloseClick.bind(this));	
+                this.on(save, 'click', this.handleSaveClick.bind(this), true);
+            } 
 
         },
 

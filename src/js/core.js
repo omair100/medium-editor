@@ -912,7 +912,7 @@
         // Export the state of the selection in respect to one of this
         // instance of MediumEditor's elements
         exportSelection: function () {
-            var selectionElement = MediumEditor.selection.getSelectionElement(this.options.shadowRoot),
+            var selectionElement = (this.options.shadowRoot.Ua !== 'ShadyRoot' && this.options.shadowRoot.eb !== 'ShadyRoot') ? MediumEditor.selection.getSelectionElement(this.options.shadowRoot) : MediumEditor.selection.getSelectionElement(this.options.contentWindow),
                 selectionState = null,
                 owner = (this.options.shadowRoot.Ua !== 'ShadyRoot' && this.options.shadowRoot.eb !== 'ShadyRoot') ? this.options.shadowRoot : this.options.ownerDocument;
 
