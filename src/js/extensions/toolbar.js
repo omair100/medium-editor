@@ -276,7 +276,7 @@
 
             // Delay the call to hideToolbar to handle bug with multiple editors on the page at once
             this.hideTimeout = setTimeout(function () {
-                this.hideToolbar();
+                //this.hideToolbar();
             }.bind(this), 1);
         },
 
@@ -302,7 +302,6 @@
             if (this.isDisplayed()) {
                 this.getToolbarElement().classList.remove('medium-editor-toolbar-active');
                 this.trigger('hideToolbar', {}, this.base.getFocusedElement());
-                this.hideExtensionForms();
             }
         },
 
@@ -395,6 +394,7 @@
             // hide toolbar
             if (!this.base.getFocusedElement() ||
                     MediumEditor.selection.selectionInContentEditableFalse(this.window)) {
+                this.hideExtensionForms();
                 return this.hideToolbar();
             }
 
@@ -419,6 +419,7 @@
             // If we don't have a 'valid' selection -> hide toolbar
             if (!MediumEditor.selection.selectionContainsContent(this.document, selectionElement) ||
                 (this.allowMultiParagraphSelection === false && this.multipleBlockElementsSelected())) {
+                this.hideExtensionForms();
                 return this.hideToolbar();
             }
 
