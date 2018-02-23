@@ -111,7 +111,7 @@
             defaultLeft = diffLeft - halfOffsetWidth - element.left + 24;
 
             this.anchorPreview.style.top = Math.round(buttonHeight + boundary.bottom - diffTop + this.window.pageYOffset - element.top - 14 + this.anchorPreview.offsetHeight - this.window.scrollY) + 'px';
-         
+
             this.anchorPreview.style.right = 'initial';
             if (middleBoundary < halfOffsetWidth) {
                 this.anchorPreview.style.left = defaultLeft + halfOffsetWidth + 'px';
