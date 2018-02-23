@@ -302,6 +302,7 @@
             if (this.isDisplayed()) {
                 this.getToolbarElement().classList.remove('medium-editor-toolbar-active');
                 this.trigger('hideToolbar', {}, this.base.getFocusedElement());
+                this.hideExtensionForms();
             }
         },
 

@@ -3812,18 +3812,10 @@ MediumEditor.extensions = {};
                 save = form.querySelector('.medium-editor-toolbar-save'),
                 input = form.querySelector('.medium-editor-toolbar-input');
 
-            // Handle clicks on the form itself
-            if (this.base.options.shadowRoot.Ua !== 'ShadyRoot' && this.base.options.shadowRoot.eb !== 'ShadyRoot') {
-                form.addEventListener('click', this.handleFormClick.bind(this));
-                close.addEventListener('click', this.handleCloseClick.bind(this));
-                input.addEventListener('keyup', this.handleTextboxKeyup.bind(this));
-                save.addEventListener('click', this.handleSaveClick.bind(this));
-            } else {
-                this.on(form, 'click', this.handleFormClick.bind(this));
-                this.on(input, 'keyup', this.handleTextboxKeyup.bind(this));
-                this.on(close, 'click', this.handleCloseClick.bind(this));
-                this.on(save, 'click', this.handleSaveClick.bind(this), true);
-            }
+            this.on(form, 'mouseup', this.handleFormClick.bind(this));
+            this.on(input, 'keyup', this.handleTextboxKeyup.bind(this));
+            this.on(close, 'click', this.handleCloseClick.bind(this));
+            this.on(save, 'click', this.handleSaveClick.bind(this), true);
         },
 
         createForm: function () {
@@ -3999,7 +3991,7 @@ MediumEditor.extensions = {};
             }
             defaultLeft = diffLeft - halfOffsetWidth - element.left + 24;
 
-            this.anchorPreview.style.top = Math.round(buttonHeight + boundary.bottom - diffTop + this.window.pageYOffset - element.top - 14 + this.anchorPreview.offsetHeight - this.window.scrollY) + 'px';
+            this.anchorPreview.style.top = Math.round(buttonHeight + boundary.bottom - diffTop + this.window.pageYOffset - element.top + this.anchorPreview.offsetHeight - this.window.scrollY) + 'px';
 
             this.anchorPreview.style.right = 'initial';
             if (middleBoundary < halfOffsetWidth) {
@@ -5666,6 +5658,7 @@ MediumEditor.extensions = {};
             if (this.isDisplayed()) {
                 this.getToolbarElement().classList.remove('medium-editor-toolbar-active');
                 this.trigger('hideToolbar', {}, this.base.getFocusedElement());
+                this.hideExtensionForms();
             }
         },
 
