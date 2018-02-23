@@ -99,7 +99,8 @@
                 diffLeft = this.diffLeft,
                 diffTop = this.diffTop,
                 halfOffsetWidth,
-                defaultLeft;
+                defaultLeft,
+                element = this.base.options.elementsContainer.getBoundingClientRect();
 
             halfOffsetWidth = this.anchorPreview.offsetWidth / 2;
             var toolbarExtension = this.base.getExtensionByName('toolbar');
@@ -107,9 +108,10 @@
                 diffLeft = toolbarExtension.diffLeft;
                 diffTop = toolbarExtension.diffTop;
             }
-            defaultLeft = diffLeft - halfOffsetWidth;
+            defaultLeft = diffLeft - halfOffsetWidth - element.left + 24;
 
-            this.anchorPreview.style.top = Math.round(buttonHeight + boundary.bottom - diffTop + this.window.pageYOffset - this.anchorPreview.offsetHeight) + 'px';
+            this.anchorPreview.style.top = Math.round(buttonHeight + boundary.bottom - diffTop + this.window.pageYOffset - element.top - 14 + this.anchorPreview.offsetHeight - this.window.scrollY) + 'px';
+         
             this.anchorPreview.style.right = 'initial';
             if (middleBoundary < halfOffsetWidth) {
                 this.anchorPreview.style.left = defaultLeft + halfOffsetWidth + 'px';
