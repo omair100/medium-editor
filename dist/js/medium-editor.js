@@ -3813,11 +3813,17 @@ MediumEditor.extensions = {};
                 input = form.querySelector('.medium-editor-toolbar-input');
 
             // Handle clicks on the form itself
-            form.addEventListener('click', this.handleFormClick.bind(this));
-            close.addEventListener('click', this.handleCloseClick.bind(this));
-            input.addEventListener('keyup', this.handleTextboxKeyup.bind(this));
-            save.addEventListener('click', this.handleSaveClick.bind(this));
-
+            if (this.base.options.shadowRoot.Ua !== 'ShadyRoot' && this.base.options.shadowRoot.eb !== 'ShadyRoot') {
+                form.addEventListener('click', this.handleFormClick.bind(this));
+                close.addEventListener('click', this.handleCloseClick.bind(this));
+                input.addEventListener('keyup', this.handleTextboxKeyup.bind(this));
+                save.addEventListener('click', this.handleSaveClick.bind(this));
+            } else {
+                this.on(form, 'click', this.handleFormClick.bind(this));
+                this.on(input, 'keyup', this.handleTextboxKeyup.bind(this));
+                this.on(close, 'click', this.handleCloseClick.bind(this));
+                this.on(save, 'click', this.handleSaveClick.bind(this), true);
+            }
         },
 
         createForm: function () {
@@ -6995,7 +7001,7 @@ MediumEditor.extensions = {};
         // Export the state of the selection in respect to one of this
         // instance of MediumEditor's elements
         exportSelection: function () {
-            var selectionElement = MediumEditor.selection.getSelectionElement(this.options.shadowRoot),
+            var selectionElement = (this.options.shadowRoot.Ua !== 'ShadyRoot' && this.options.shadowRoot.eb !== 'ShadyRoot') ? MediumEditor.selection.getSelectionElement(this.options.shadowRoot) : MediumEditor.selection.getSelectionElement(this.options.contentWindow),
                 selectionState = null,
                 owner = (this.options.shadowRoot.Ua !== 'ShadyRoot' && this.options.shadowRoot.eb !== 'ShadyRoot') ? this.options.shadowRoot : this.options.ownerDocument;
 

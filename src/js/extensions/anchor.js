@@ -269,10 +269,9 @@
             } else {
                 this.on(form, 'click', this.handleFormClick.bind(this));
                 this.on(input, 'keyup', this.handleTextboxKeyup.bind(this));
-                this.on(close, 'click', this.handleCloseClick.bind(this));	
+                this.on(close, 'click', this.handleCloseClick.bind(this));
                 this.on(save, 'click', this.handleSaveClick.bind(this), true);
-            } 
-
+            }
         },
 
         createForm: function () {
