@@ -10,9 +10,9 @@
             MediumEditor.extensions.button.prototype.init.apply(this, arguments);
         },
 
-        // default labels for the form buttons
-        formSaveLabel: '&#10003;',
-        formCloseLabel: '&times;',
+        formSaveLabel: '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 24.4 24" style="enable-background:new 0 0 24.4 24;" xml:space="preserve"><style type="text/css">.st0{fill: none; stroke: #000; stroke-width:3;stroke-miterlimit:10;}</style><polyline class="st0" points="1.1,12.4 7.8,19 23.2,3.6 "/> </svg>',
+
+        formCloseLabel: '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve"><style type="text/css">.st0{fill: none; stroke: #000; stroke-width:3;stroke-miterlimit:10;}</style><g><path d="M14.5,12l9.5,9.5L21.5,24L12,14.5L2.5,24L0,21.5L9.5,12L0,2.5L2.5,0L12,9.5L21.5,0L24,2.5L14.5,12z"/></g></svg>',
 
         /* activeClass: [string]
          * set class which added to shown form
