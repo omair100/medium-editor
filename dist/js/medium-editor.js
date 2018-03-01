@@ -4226,7 +4226,7 @@ MediumEditor.extensions = {};
                 this.performLinkingTimeout = setTimeout(function () {
                     try {
                         var sel = this.base.exportSelection();
-                        if (this.performLinking(keyPressEvent.target)) {
+                        if (this.performLinking(this.base.origElements)) {
                             // pass true for favorLaterSelectionAnchor - this is needed for links at the end of a
                             // paragraph in MS IE, or MS IE causes the link to be deleted right after adding it.
                             this.base.importSelection(sel, true);
