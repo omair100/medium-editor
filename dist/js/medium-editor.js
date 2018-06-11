@@ -3609,7 +3609,7 @@ MediumEditor.extensions = {};
             event.preventDefault();
             event.stopPropagation();
 
-            var selectionDoc = (this.base.options.shadowRoot.Ua !== 'ShadyRoot' && this.base.options.shadowRoot.eb !== 'ShadyRoot' && this.options.shadowRoot.sa !== 'ShadyRoot') ? this.base.options.shadowRoot : this.document,
+            var selectionDoc = (this.base.options.shadowRoot.Ua !== 'ShadyRoot' && this.base.options.shadowRoot.eb !== 'ShadyRoot' && this.base.options.shadowRoot.sa !== 'ShadyRoot') ? this.base.options.shadowRoot : this.document,
                 range = MediumEditor.selection.getSelectionRange(selectionDoc);
 
             if (range.startContainer.nodeName.toLowerCase() === 'a' ||
@@ -5820,7 +5820,7 @@ MediumEditor.extensions = {};
                     }
                 };
 
-            if (this.base.options.shadowRoot.Ua !== 'ShadyRoot' && this.base.options.shadowRoot.eb !== 'ShadyRoot' && this.options.shadowRoot.sa !== 'ShadyRoot') {
+            if (this.base.options.shadowRoot.Ua !== 'ShadyRoot' && this.base.options.shadowRoot.eb !== 'ShadyRoot' && this.base.options.shadowRoot.sa !== 'ShadyRoot') {
                 selectionRange = MediumEditor.selection.getSelectionRange(this.base.options.shadowRoot);
             } else {
                 selectionRange = MediumEditor.selection.getSelectionRange(this.document);
@@ -5881,7 +5881,7 @@ MediumEditor.extensions = {};
             var container = this.base.getFocusedElement(),
                 selection = null;
 
-            if (this.base.options.shadowRoot.Ua !== 'ShadyRoot' && this.base.options.shadowRoot.eb !== 'ShadyRoot' && this.options.shadowRoot.sa !== 'ShadyRoot') {
+            if (this.base.options.shadowRoot.Ua !== 'ShadyRoot' && this.base.options.shadowRoot.eb !== 'ShadyRoot' && this.base.options.shadowRoot.sa !== 'ShadyRoot') {
                 selection = this.base.options.shadowRoot.getSelection();
             } else {
                 selection = this.window.getSelection();
