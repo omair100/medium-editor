@@ -66,5 +66,8 @@
     "test": "grunt test --verbose",
     "test:ci": "grunt travis --verbose",
     "start": "open ./demo/index.html"
+  },
+  "dependencies": {
+    "node-sass": "4.9.0"
   }
 }

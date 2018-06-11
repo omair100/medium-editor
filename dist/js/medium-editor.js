@@ -2781,7 +2781,7 @@ MediumEditor.extensions = {};
                 // Don't blur focused element if clicking on editor, toolbar, or anchorpreview
                 if (hadFocus && externalEvent) {
                     //console.log(selection);
-                    if (this.options.shadowRoot.Ua !== 'ShadyRoot' && this.options.shadowRoot.eb !== 'ShadyRoot') {
+                    if (this.options.shadowRoot.Ua !== 'ShadyRoot' && this.options.shadowRoot.eb !== 'ShadyRoot' && this.options.shadowRoot.sa !== 'ShadyRoot') {
                         setTimeout(function () {
                             var selection = this.options.shadowRoot.getSelection();
                             if (selection.type !== 'Range') {
@@ -3609,7 +3609,7 @@ MediumEditor.extensions = {};
             event.preventDefault();
             event.stopPropagation();
 
-            var selectionDoc = (this.base.options.shadowRoot.Ua !== 'ShadyRoot' && this.base.options.shadowRoot.eb !== 'ShadyRoot') ? this.base.options.shadowRoot : this.document,
+            var selectionDoc = (this.base.options.shadowRoot.Ua !== 'ShadyRoot' && this.base.options.shadowRoot.eb !== 'ShadyRoot' && this.options.shadowRoot.sa !== 'ShadyRoot') ? this.base.options.shadowRoot : this.document,
                 range = MediumEditor.selection.getSelectionRange(selectionDoc);
 
             if (range.startContainer.nodeName.toLowerCase() === 'a' ||
@@ -5820,7 +5820,7 @@ MediumEditor.extensions = {};
                     }
                 };
 
-            if (this.base.options.shadowRoot.Ua !== 'ShadyRoot' && this.base.options.shadowRoot.eb !== 'ShadyRoot') {
+            if (this.base.options.shadowRoot.Ua !== 'ShadyRoot' && this.base.options.shadowRoot.eb !== 'ShadyRoot' && this.options.shadowRoot.sa !== 'ShadyRoot') {
                 selectionRange = MediumEditor.selection.getSelectionRange(this.base.options.shadowRoot);
             } else {
                 selectionRange = MediumEditor.selection.getSelectionRange(this.document);
@@ -5881,7 +5881,7 @@ MediumEditor.extensions = {};
             var container = this.base.getFocusedElement(),
                 selection = null;
 
-            if (this.base.options.shadowRoot.Ua !== 'ShadyRoot' && this.base.options.shadowRoot.eb !== 'ShadyRoot') {
+            if (this.base.options.shadowRoot.Ua !== 'ShadyRoot' && this.base.options.shadowRoot.eb !== 'ShadyRoot' && this.options.shadowRoot.sa !== 'ShadyRoot') {
                 selection = this.base.options.shadowRoot.getSelection();
             } else {
                 selection = this.window.getSelection();
@@ -6087,7 +6087,7 @@ MediumEditor.extensions = {};
     // Event handlers that shouldn't be exposed externally
 
     function handleDisableExtraSpaces(event) {
-        var selectionDoc = (this.options.shadowRoot.Ua !== 'ShadyRoot' && this.options.shadowRoot.eb !== 'ShadyRoot') ? this.options.shadowRoot : this.options.ownerDocument,
+        var selectionDoc = (this.options.shadowRoot.Ua !== 'ShadyRoot' && this.options.shadowRoot.eb !== 'ShadyRoot' && this.options.shadowRoot.sa !== 'ShadyRoot') ? this.options.shadowRoot : this.options.ownerDocument,
             node = MediumEditor.selection.getSelectionStart(selectionDoc),
             textContent = node.textContent,
             caretPositions = MediumEditor.selection.getCaretOffsets(node, selectionDoc.getSelection().getRangeAt(0));
@@ -6221,14 +6221,14 @@ MediumEditor.extensions = {};
             // when cursor is at the begining of the element and the element is <blockquote>
             // then pressing backspace key should change the <blockquote> to a <p> tag
             event.preventDefault();
-            var selectionDoc = (this.options.shadowRoot.Ua !== 'ShadyRoot' && this.options.shadowRoot.eb !== 'ShadyRoot') ? this.options.shadowRoot : this.options.ownerDocument;
+            var selectionDoc = (this.options.shadowRoot.Ua !== 'ShadyRoot' && this.options.shadowRoot.eb !== 'ShadyRoot' && this.options.shadowRoot.sa !== 'ShadyRoot') ? this.options.shadowRoot : this.options.ownerDocument;
             MediumEditor.util.execFormatBlock(this.options.ownerDocument, 'p', selectionDoc);
         }
     }
 
     function handleKeyup(event) {
 
-        var selectionDoc = (this.options.shadowRoot.Ua !== 'ShadyRoot' && this.options.shadowRoot.eb !== 'ShadyRoot') ? this.options.shadowRoot : this.options.ownerDocument,
+        var selectionDoc = (this.options.shadowRoot.Ua !== 'ShadyRoot' && this.options.shadowRoot.eb !== 'ShadyRoot' && this.options.shadowRoot.sa !== 'ShadyRoot') ? this.options.shadowRoot : this.options.ownerDocument,
             node = MediumEditor.selection.getSelectionStart(selectionDoc),
             tagName;
 
@@ -6591,7 +6591,7 @@ MediumEditor.extensions = {};
         // type of block element (ie append-blockquote, append-h1, append-pre, etc.)
         match = appendAction.exec(action);
         if (match) {
-            var selectionDoc = (this.options.shadowRoot.Ua !== 'ShadyRoot' && this.options.shadowRoot.eb !== 'ShadyRoot') ? this.options.shadowRoot : this.options.ownerDocument;
+            var selectionDoc = (this.options.shadowRoot.Ua !== 'ShadyRoot' && this.options.shadowRoot.eb !== 'ShadyRoot' && this.options.shadowRoot.sa !== 'ShadyRoot') ? this.options.shadowRoot : this.options.ownerDocument;
 
             return MediumEditor.util.execFormatBlock(this.options.ownerDocument, match[1], selectionDoc);
         }
@@ -6995,9 +6995,9 @@ MediumEditor.extensions = {};
         // Export the state of the selection in respect to one of this
         // instance of MediumEditor's elements
         exportSelection: function () {
-            var selectionElement = (this.options.shadowRoot.Ua !== 'ShadyRoot' && this.options.shadowRoot.eb !== 'ShadyRoot') ? MediumEditor.selection.getSelectionElement(this.options.shadowRoot) : MediumEditor.selection.getSelectionElement(this.options.contentWindow),
+            var selectionElement = (this.options.shadowRoot.Ua !== 'ShadyRoot' && this.options.shadowRoot.eb !== 'ShadyRoot' && this.options.shadowRoot.sa !== 'ShadyRoot') ? MediumEditor.selection.getSelectionElement(this.options.shadowRoot) : MediumEditor.selection.getSelectionElement(this.options.contentWindow),
                 selectionState = null,
-                owner = (this.options.shadowRoot.Ua !== 'ShadyRoot' && this.options.shadowRoot.eb !== 'ShadyRoot') ? this.options.shadowRoot : this.options.ownerDocument;
+                owner = (this.options.shadowRoot.Ua !== 'ShadyRoot' && this.options.shadowRoot.eb !== 'ShadyRoot' && this.options.shadowRoot.sa !== 'ShadyRoot') ? this.options.shadowRoot : this.options.ownerDocument;
 
             selectionState = MediumEditor.selection.exportSelection(selectionElement, owner);
 
