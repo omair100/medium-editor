@@ -8,7 +8,8 @@
             this.options.shadowRoot.sa !== 'ShadyRoot' && this.options.shadowRoot.Oa !== 'ShadyRoot') ? this.options.shadowRoot : this.options.ownerDocument,
             node = MediumEditor.selection.getSelectionStart(selectionDoc),
             textContent = node.textContent,
-            caretPositions = MediumEditor.selection.getCaretOffsets(node, selectionDoc.getSelection().getRangeAt(0));
+            selectionRange = selectionDoc.getSelection ? selectionDoc.getSelection().getRangeAt(0) : this.options.selectionPolyfill(selectionDoc).range,
+            caretPositions = MediumEditor.selection.getCaretOffsets(node, selectionRange);
 
         if ((textContent[caretPositions.left - 1] === undefined) || (textContent[caretPositions.left - 1].trim() === '') || (textContent[caretPositions.left] !== undefined && textContent[caretPositions.left].trim() === '')) {
             event.preventDefault();
@@ -19,7 +20,7 @@
         if (this.options.disableReturn || element.getAttribute('data-disable-return')) {
             event.preventDefault();
         } else if (this.options.disableDoubleReturn || element.getAttribute('data-disable-double-return')) {
-            var node = MediumEditor.selection.getSelectionStart(this.options.ownerDocument);
+            var node = MediumEditor.selection.getSelectionStart(this.options.ownerDocument, this.options.selectionPolyfill);
 
             // if current text selection is empty OR previous sibling text is empty OR it is not a list
             if ((node && node.textContent.trim() === '' && node.nodeName.toLowerCase() !== 'li') ||
@@ -32,7 +33,7 @@
 
     function handleTabKeydown(event) {
         // Override tab only for pre nodes
-        var node = MediumEditor.selection.getSelectionStart(this.options.ownerDocument),
+        var node = MediumEditor.selection.getSelectionStart(this.options.ownerDocument, this.options.selectionPolyfill),
             tag = node && node.nodeName.toLowerCase();
 
         if (tag === 'pre') {
@@ -140,14 +141,14 @@
             // then pressing backspace key should change the <blockquote> to a <p> tag
             event.preventDefault();
             var selectionDoc = (this.options.shadowRoot.Ua !== 'ShadyRoot' && this.options.shadowRoot.eb !== 'ShadyRoot' && this.options.shadowRoot.sa !== 'ShadyRoot' && this.options.shadowRoot.Oa !== 'ShadyRoot') ? this.options.shadowRoot : this.options.ownerDocument;
-            MediumEditor.util.execFormatBlock(this.options.ownerDocument, 'p', selectionDoc);
+            MediumEditor.util.execFormatBlock(this.options.ownerDocument, 'p', selectionDoc, this.options.selectionPolyfill);
         }
     }
 
     function handleKeyup(event) {
 
         var selectionDoc = (this.options.shadowRoot.Ua !== 'ShadyRoot' && this.options.shadowRoot.eb !== 'ShadyRoot' && this.options.shadowRoot.sa !== 'ShadyRoot' && this.options.shadowRoot.Oa !== 'ShadyRoot') ? this.options.shadowRoot : this.options.ownerDocument,
-            node = MediumEditor.selection.getSelectionStart(selectionDoc),
+            node = MediumEditor.selection.getSelectionStart(selectionDoc, this.options.selectionPolyfill),
             tagName;
 
         if (!node) {
@@ -511,7 +512,7 @@
         if (match) {
             var selectionDoc = (this.options.shadowRoot.Ua !== 'ShadyRoot' && this.options.shadowRoot.eb !== 'ShadyRoot' && this.options.shadowRoot.sa !== 'ShadyRoot' && this.options.shadowRoot.Oa !== 'ShadyRoot') ? this.options.shadowRoot : this.options.ownerDocument;
 
-            return MediumEditor.util.execFormatBlock(this.options.ownerDocument, match[1], selectionDoc);
+            return MediumEditor.util.execFormatBlock(this.options.ownerDocument, match[1], selectionDoc, this.options.selectionPolyfill);
         }
 
         if (action === 'fontSize') {
@@ -535,7 +536,7 @@
          * If the action is to justify the text */
         if (justifyAction.exec(action)) {
             var result = this.options.ownerDocument.execCommand(action, false, null),
-                parentNode = MediumEditor.selection.getSelectedParentElement(MediumEditor.selection.getSelectionRange(this.options.ownerDocument));
+                parentNode = MediumEditor.selection.getSelectedParentElement(MediumEditor.selection.getSelectionRange(this.options.ownerDocument, this.options.selectionPolyfill));
             if (parentNode) {
                 cleanupJustifyDivFragments.call(this, MediumEditor.util.getTopBlockContainer(parentNode));
             }
@@ -917,7 +918,7 @@
                 selectionState = null,
                 owner = (this.options.shadowRoot.Ua !== 'ShadyRoot' && this.options.shadowRoot.eb !== 'ShadyRoot' && this.options.shadowRoot.sa !== 'ShadyRoot' && this.options.shadowRoot.Oa !== 'ShadyRoot') ? this.options.shadowRoot : this.options.ownerDocument;
 
-            selectionState = MediumEditor.selection.exportSelection(selectionElement, owner);
+            selectionState = MediumEditor.selection.exportSelection(selectionElement, owner, this.options.selectionPolyfill);
 
             return selectionState;
         },
@@ -1060,13 +1061,13 @@
                         }
 
                         if (this.options.targetBlank || opts.target === '_blank') {
-                            MediumEditor.util.setTargetBlank(MediumEditor.selection.getSelectionStart(this.options.ownerDocument), opts.url);
+                            MediumEditor.util.setTargetBlank(MediumEditor.selection.getSelectionStart(this.options.ownerDocument, this.options.selectionPolyfill), opts.url);
                         } else {
-                            MediumEditor.util.removeTargetBlank(MediumEditor.selection.getSelectionStart(this.options.ownerDocument), opts.url);
+                            MediumEditor.util.removeTargetBlank(MediumEditor.selection.getSelectionStart(this.options.ownerDocument, this.options.selectionPolyfill), opts.url);
                         }
 
                         if (opts.buttonClass) {
-                            MediumEditor.util.addClassToAnchors(MediumEditor.selection.getSelectionStart(this.options.ownerDocument), opts.buttonClass);
+                            MediumEditor.util.addClassToAnchors(MediumEditor.selection.getSelectionStart(this.options.ownerDocument, this.options.selectionPolyfill), opts.buttonClass);
                         }
                     }
                 }

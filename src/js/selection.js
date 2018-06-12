@@ -10,8 +10,8 @@
     }
 
     var Selection = {
-        findMatchingSelectionParent: function (testElementFunction, contentWindow) {
-            var selection = contentWindow.getSelection(),
+        findMatchingSelectionParent: function (testElementFunction, contentWindow, selectionPolyfill) {
+            var selection = contentWindow.getSelection ? contentWindow.getSelection() : selectionPolyfill(contentWindow),
                 range,
                 current;
 
@@ -19,27 +19,27 @@
                 return false;
             }
 
-            range = selection.getRangeAt(0);
+            range = contentWindow.getSelection ? selection.getRangeAt(0) : selection.range;
             current = range.commonAncestorContainer;
 
             return MediumEditor.util.traverseUp(current, testElementFunction);
         },
 
-        getSelectionElement: function (contentWindow) {
+        getSelectionElement: function (contentWindow, selectionPolyfill) {
             return this.findMatchingSelectionParent(function (el) {
                 return MediumEditor.util.isMediumEditorElement(el);
-            }, contentWindow);
+            }, contentWindow, selectionPolyfill);
         },
 
         // http://stackoverflow.com/questions/17678843/cant-restore-selection-after-html-modify-even-if-its-the-same-html
         // Tim Down
-        exportSelection: function (root, doc) {
+        exportSelection: function (root, doc, selectionPolyfill) {
             if (!root) {
                 return null;
             }
 
             var selectionState = null,
-                selection = doc.getSelection();
+                selection = doc.getSelection ? doc.getSelection() : selectionPolyfill(doc).range;
 
             if (selection.rangeCount > 0) {
                 var range = selection.getRangeAt(0),
@@ -489,7 +489,7 @@
             return false;
         },
 
-        selectionInContentEditableFalse: function (contentWindow) {
+        selectionInContentEditableFalse: function (contentWindow, selectionPolyfill) {
             // determine if the current selection is exclusively inside
             // a contenteditable="false", though treat the case of an
             // explicit contenteditable="true" inside a "false" as false.
@@ -500,7 +500,7 @@
                         sawtrue = true;
                     }
                     return el.nodeName !== '#text' && ce === 'false';
-                }, contentWindow);
+                }, contentWindow, selectionPolyfill);
 
             return !sawtrue && sawfalse;
         },
@@ -654,19 +654,33 @@
             this.select(doc, node, offset);
         },
 
-        getSelectionRange: function (ownerDocument) {
-            var selection = ownerDocument.getSelection();
-            if (selection.rangeCount === 0) {
-                return null;
+        getSelectionRange: function (ownerDocument, selectionPolyfill) {
+            var selection;
+
+            if (ownerDocument.getSelection) {
+                selection = ownerDocument.getSelection();
+
+                return selection.getRangeAt(0);
+            } else {
+                selection = selectionPolyfill(ownerDocument);
+
+                return selection.range;
             }
-            return selection.getRangeAt(0);
         },
 
         // http://stackoverflow.com/questions/1197401/how-can-i-get-the-element-the-caret-is-in-with-javascript-when-using-contentedi
         // by You
-        getSelectionStart: function (ownerDocument) {
-            var node = ownerDocument.getSelection().anchorNode,
-                startNode = (node && node.nodeType === 3 ? node.parentNode : node);
+        getSelectionStart: function (ownerDocument, selectionPolyfill) {
+            var node, startNode, selection;
+
+            if (ownerDocument.getSelection) {
+                node = ownerDocument.getSelection().anchorNode;
+            } else {
+                selection = selectionPolyfill(ownerDocument);
+                node = selection.range.startContainer;
+            }
+
+            startNode = (node && node.nodeType === 3 ? node.parentNode : node);
 
             return startNode;
         }

@@ -381,7 +381,8 @@
                     //console.log(selection);
                     if (this.options.shadowRoot.Ua !== 'ShadyRoot' && this.options.shadowRoot.eb !== 'ShadyRoot' && this.options.shadowRoot.sa !== 'ShadyRoot' && this.options.shadowRoot.Oa !== 'ShadyRoot') {
                         setTimeout(function () {
-                            var selection = this.options.shadowRoot.getSelection();
+                            var selection = (this.options.shadowRoot.getSelection) ?
+                                                this.options.shadowRoot.getSelection() : this.options.selectionPolyfill(this.options.shadowRoot);
                             if (selection.type !== 'Range') {
                                 hadFocus.removeAttribute('data-medium-focused');
                                 this.triggerCustomEvent('blur', eventObj, hadFocus);

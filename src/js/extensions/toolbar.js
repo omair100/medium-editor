@@ -393,7 +393,7 @@
             // If no editable has focus OR selection is inside contenteditable = false
             // hide toolbar
             if (!this.base.getFocusedElement() ||
-                    MediumEditor.selection.selectionInContentEditableFalse(this.window)) {
+                    MediumEditor.selection.selectionInContentEditableFalse(this.window, this.base.options.selectionPolyfill)) {
                 this.hideExtensionForms();
                 return this.hideToolbar();
             }
@@ -466,9 +466,9 @@
 
             if (this.base.options.shadowRoot.Ua !== 'ShadyRoot' && this.base.options.shadowRoot.eb !== 'ShadyRoot' &&
                 this.base.options.shadowRoot.sa !== 'ShadyRoot' && this.base.options.shadowRoot.Oa !== 'ShadyRoot') {
-                selectionRange = MediumEditor.selection.getSelectionRange(this.base.options.shadowRoot);
+                selectionRange = MediumEditor.selection.getSelectionRange(this.base.options.shadowRoot, this.base.options.selectionPolyfill);
             } else {
-                selectionRange = MediumEditor.selection.getSelectionRange(this.document);
+                selectionRange = MediumEditor.selection.getSelectionRange(this.document, this.base.options.selectionPolyfill);
             }
 
             if (!selectionRange) {
@@ -528,7 +528,8 @@
 
             if (this.base.options.shadowRoot.Ua !== 'ShadyRoot' && this.base.options.shadowRoot.eb !== 'ShadyRoot' &&
                 this.base.options.shadowRoot.sa !== 'ShadyRoot' && this.base.options.shadowRoot.Oa !== 'ShadyRoot') {
-                selection = this.base.options.shadowRoot.getSelection();
+                selection = this.base.options.shadowRoot.getSelection ? this.base.options.shadowRoot.getSelection()
+                    : this.base.options.selectionPolyfill(this.base.options.shadowRoot);
             } else {
                 selection = this.window.getSelection();
             }

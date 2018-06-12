@@ -911,9 +911,9 @@ MediumEditor.extensions = {};
             return res;
         },
 
-        execFormatBlock: function (doc, tagName, selectionDoc) {
+        execFormatBlock: function (doc, tagName, selectionDoc, selectionPolyfill) {
             // Get the top level block element that contains the selection
-            var blockContainer = Util.getTopBlockContainer(MediumEditor.selection.getSelectionStart(selectionDoc)),
+            var blockContainer = Util.getTopBlockContainer(MediumEditor.selection.getSelectionStart(selectionDoc, selectionPolyfill)),
                 childNodes;
 
             // Special handling for blockquote
@@ -1735,8 +1735,8 @@ MediumEditor.extensions = {};
     }
 
     var Selection = {
-        findMatchingSelectionParent: function (testElementFunction, contentWindow) {
-            var selection = contentWindow.getSelection(),
+        findMatchingSelectionParent: function (testElementFunction, contentWindow, selectionPolyfill) {
+            var selection = contentWindow.getSelection ? contentWindow.getSelection() : selectionPolyfill(contentWindow),
                 range,
                 current;
 
@@ -1744,27 +1744,27 @@ MediumEditor.extensions = {};
                 return false;
             }
 
-            range = selection.getRangeAt(0);
+            range = contentWindow.getSelection ? selection.getRangeAt(0) : selection.range;
             current = range.commonAncestorContainer;
 
             return MediumEditor.util.traverseUp(current, testElementFunction);
         },
 
-        getSelectionElement: function (contentWindow) {
+        getSelectionElement: function (contentWindow, selectionPolyfill) {
             return this.findMatchingSelectionParent(function (el) {
                 return MediumEditor.util.isMediumEditorElement(el);
-            }, contentWindow);
+            }, contentWindow, selectionPolyfill);
         },
 
         // http://stackoverflow.com/questions/17678843/cant-restore-selection-after-html-modify-even-if-its-the-same-html
         // Tim Down
-        exportSelection: function (root, doc) {
+        exportSelection: function (root, doc, selectionPolyfill) {
             if (!root) {
                 return null;
             }
 
             var selectionState = null,
-                selection = doc.getSelection();
+                selection = doc.getSelection ? doc.getSelection() : selectionPolyfill(doc).range;
 
             if (selection.rangeCount > 0) {
                 var range = selection.getRangeAt(0),
@@ -2214,7 +2214,7 @@ MediumEditor.extensions = {};
             return false;
         },
 
-        selectionInContentEditableFalse: function (contentWindow) {
+        selectionInContentEditableFalse: function (contentWindow, selectionPolyfill) {
             // determine if the current selection is exclusively inside
             // a contenteditable="false", though treat the case of an
             // explicit contenteditable="true" inside a "false" as false.
@@ -2225,7 +2225,7 @@ MediumEditor.extensions = {};
                         sawtrue = true;
                     }
                     return el.nodeName !== '#text' && ce === 'false';
-                }, contentWindow);
+                }, contentWindow, selectionPolyfill);
 
             return !sawtrue && sawfalse;
         },
@@ -2379,19 +2379,33 @@ MediumEditor.extensions = {};
             this.select(doc, node, offset);
         },
 
-        getSelectionRange: function (ownerDocument) {
-            var selection = ownerDocument.getSelection();
-            if (selection.rangeCount === 0) {
-                return null;
+        getSelectionRange: function (ownerDocument, selectionPolyfill) {
+            var selection;
+
+            if (ownerDocument.getSelection) {
+                selection = ownerDocument.getSelection();
+
+                return selection.getRangeAt(0);
+            } else {
+                selection = selectionPolyfill(ownerDocument);
+
+                return selection.range;
             }
-            return selection.getRangeAt(0);
         },
 
         // http://stackoverflow.com/questions/1197401/how-can-i-get-the-element-the-caret-is-in-with-javascript-when-using-contentedi
         // by You
-        getSelectionStart: function (ownerDocument) {
-            var node = ownerDocument.getSelection().anchorNode,
-                startNode = (node && node.nodeType === 3 ? node.parentNode : node);
+        getSelectionStart: function (ownerDocument, selectionPolyfill) {
+            var node, startNode, selection;
+
+            if (ownerDocument.getSelection) {
+                node = ownerDocument.getSelection().anchorNode;
+            } else {
+                selection = selectionPolyfill(ownerDocument);
+                node = selection.range.startContainer;
+            }
+
+            startNode = (node && node.nodeType === 3 ? node.parentNode : node);
 
             return startNode;
         }
@@ -2783,7 +2797,8 @@ MediumEditor.extensions = {};
                     //console.log(selection);
                     if (this.options.shadowRoot.Ua !== 'ShadyRoot' && this.options.shadowRoot.eb !== 'ShadyRoot' && this.options.shadowRoot.sa !== 'ShadyRoot' && this.options.shadowRoot.Oa !== 'ShadyRoot') {
                         setTimeout(function () {
-                            var selection = this.options.shadowRoot.getSelection();
+                            var selection = (this.options.shadowRoot.getSelection) ?
+                                                this.options.shadowRoot.getSelection() : this.options.selectionPolyfill(this.options.shadowRoot);
                             if (selection.type !== 'Range') {
                                 hadFocus.removeAttribute('data-medium-focused');
                                 this.triggerCustomEvent('blur', eventObj, hadFocus);
@@ -3611,7 +3626,7 @@ MediumEditor.extensions = {};
 
             var selectionDoc = (this.base.options.shadowRoot.Ua !== 'ShadyRoot' && this.base.options.shadowRoot.eb !== 'ShadyRoot' &&
                 this.base.options.shadowRoot.sa !== 'ShadyRoot' && this.base.options.shadowRoot.Oa !== 'ShadyRoot') ? this.base.options.shadowRoot : this.document,
-                range = MediumEditor.selection.getSelectionRange(selectionDoc);
+                range = MediumEditor.selection.getSelectionRange(selectionDoc, this.base.options.selectionPolyfill);
 
             if (range.startContainer.nodeName.toLowerCase() === 'a' ||
                 range.endContainer.nodeName.toLowerCase() === 'a' ||
@@ -5750,7 +5765,7 @@ MediumEditor.extensions = {};
             // If no editable has focus OR selection is inside contenteditable = false
             // hide toolbar
             if (!this.base.getFocusedElement() ||
-                    MediumEditor.selection.selectionInContentEditableFalse(this.window)) {
+                    MediumEditor.selection.selectionInContentEditableFalse(this.window, this.base.options.selectionPolyfill)) {
                 this.hideExtensionForms();
                 return this.hideToolbar();
             }
@@ -5823,9 +5838,9 @@ MediumEditor.extensions = {};
 
             if (this.base.options.shadowRoot.Ua !== 'ShadyRoot' && this.base.options.shadowRoot.eb !== 'ShadyRoot' &&
                 this.base.options.shadowRoot.sa !== 'ShadyRoot' && this.base.options.shadowRoot.Oa !== 'ShadyRoot') {
-                selectionRange = MediumEditor.selection.getSelectionRange(this.base.options.shadowRoot);
+                selectionRange = MediumEditor.selection.getSelectionRange(this.base.options.shadowRoot, this.base.options.selectionPolyfill);
             } else {
-                selectionRange = MediumEditor.selection.getSelectionRange(this.document);
+                selectionRange = MediumEditor.selection.getSelectionRange(this.document, this.base.options.selectionPolyfill);
             }
 
             if (!selectionRange) {
@@ -5885,7 +5900,8 @@ MediumEditor.extensions = {};
 
             if (this.base.options.shadowRoot.Ua !== 'ShadyRoot' && this.base.options.shadowRoot.eb !== 'ShadyRoot' &&
                 this.base.options.shadowRoot.sa !== 'ShadyRoot' && this.base.options.shadowRoot.Oa !== 'ShadyRoot') {
-                selection = this.base.options.shadowRoot.getSelection();
+                selection = this.base.options.shadowRoot.getSelection ? this.base.options.shadowRoot.getSelection()
+                    : this.base.options.selectionPolyfill(this.base.options.shadowRoot);
             } else {
                 selection = this.window.getSelection();
             }
@@ -6094,7 +6110,8 @@ MediumEditor.extensions = {};
             this.options.shadowRoot.sa !== 'ShadyRoot' && this.options.shadowRoot.Oa !== 'ShadyRoot') ? this.options.shadowRoot : this.options.ownerDocument,
             node = MediumEditor.selection.getSelectionStart(selectionDoc),
             textContent = node.textContent,
-            caretPositions = MediumEditor.selection.getCaretOffsets(node, selectionDoc.getSelection().getRangeAt(0));
+            selectionRange = selectionDoc.getSelection ? selectionDoc.getSelection().getRangeAt(0) : this.options.selectionPolyfill(selectionDoc).range,
+            caretPositions = MediumEditor.selection.getCaretOffsets(node, selectionRange);
 
         if ((textContent[caretPositions.left - 1] === undefined) || (textContent[caretPositions.left - 1].trim() === '') || (textContent[caretPositions.left] !== undefined && textContent[caretPositions.left].trim() === '')) {
             event.preventDefault();
@@ -6105,7 +6122,7 @@ MediumEditor.extensions = {};
         if (this.options.disableReturn || element.getAttribute('data-disable-return')) {
             event.preventDefault();
         } else if (this.options.disableDoubleReturn || element.getAttribute('data-disable-double-return')) {
-            var node = MediumEditor.selection.getSelectionStart(this.options.ownerDocument);
+            var node = MediumEditor.selection.getSelectionStart(this.options.ownerDocument, this.options.selectionPolyfill);
 
             // if current text selection is empty OR previous sibling text is empty OR it is not a list
             if ((node && node.textContent.trim() === '' && node.nodeName.toLowerCase() !== 'li') ||
@@ -6118,7 +6135,7 @@ MediumEditor.extensions = {};
 
     function handleTabKeydown(event) {
         // Override tab only for pre nodes
-        var node = MediumEditor.selection.getSelectionStart(this.options.ownerDocument),
+        var node = MediumEditor.selection.getSelectionStart(this.options.ownerDocument, this.options.selectionPolyfill),
             tag = node && node.nodeName.toLowerCase();
 
         if (tag === 'pre') {
@@ -6226,14 +6243,14 @@ MediumEditor.extensions = {};
             // then pressing backspace key should change the <blockquote> to a <p> tag
             event.preventDefault();
             var selectionDoc = (this.options.shadowRoot.Ua !== 'ShadyRoot' && this.options.shadowRoot.eb !== 'ShadyRoot' && this.options.shadowRoot.sa !== 'ShadyRoot' && this.options.shadowRoot.Oa !== 'ShadyRoot') ? this.options.shadowRoot : this.options.ownerDocument;
-            MediumEditor.util.execFormatBlock(this.options.ownerDocument, 'p', selectionDoc);
+            MediumEditor.util.execFormatBlock(this.options.ownerDocument, 'p', selectionDoc, this.options.selectionPolyfill);
         }
     }
 
     function handleKeyup(event) {
 
         var selectionDoc = (this.options.shadowRoot.Ua !== 'ShadyRoot' && this.options.shadowRoot.eb !== 'ShadyRoot' && this.options.shadowRoot.sa !== 'ShadyRoot' && this.options.shadowRoot.Oa !== 'ShadyRoot') ? this.options.shadowRoot : this.options.ownerDocument,
-            node = MediumEditor.selection.getSelectionStart(selectionDoc),
+            node = MediumEditor.selection.getSelectionStart(selectionDoc, this.options.selectionPolyfill),
             tagName;
 
         if (!node) {
@@ -6597,7 +6614,7 @@ MediumEditor.extensions = {};
         if (match) {
             var selectionDoc = (this.options.shadowRoot.Ua !== 'ShadyRoot' && this.options.shadowRoot.eb !== 'ShadyRoot' && this.options.shadowRoot.sa !== 'ShadyRoot' && this.options.shadowRoot.Oa !== 'ShadyRoot') ? this.options.shadowRoot : this.options.ownerDocument;
 
-            return MediumEditor.util.execFormatBlock(this.options.ownerDocument, match[1], selectionDoc);
+            return MediumEditor.util.execFormatBlock(this.options.ownerDocument, match[1], selectionDoc, this.options.selectionPolyfill);
         }
 
         if (action === 'fontSize') {
@@ -6621,7 +6638,7 @@ MediumEditor.extensions = {};
          * If the action is to justify the text */
         if (justifyAction.exec(action)) {
             var result = this.options.ownerDocument.execCommand(action, false, null),
-                parentNode = MediumEditor.selection.getSelectedParentElement(MediumEditor.selection.getSelectionRange(this.options.ownerDocument));
+                parentNode = MediumEditor.selection.getSelectedParentElement(MediumEditor.selection.getSelectionRange(this.options.ownerDocument, this.options.selectionPolyfill));
             if (parentNode) {
                 cleanupJustifyDivFragments.call(this, MediumEditor.util.getTopBlockContainer(parentNode));
             }
@@ -7003,7 +7020,7 @@ MediumEditor.extensions = {};
                 selectionState = null,
                 owner = (this.options.shadowRoot.Ua !== 'ShadyRoot' && this.options.shadowRoot.eb !== 'ShadyRoot' && this.options.shadowRoot.sa !== 'ShadyRoot' && this.options.shadowRoot.Oa !== 'ShadyRoot') ? this.options.shadowRoot : this.options.ownerDocument;
 
-            selectionState = MediumEditor.selection.exportSelection(selectionElement, owner);
+            selectionState = MediumEditor.selection.exportSelection(selectionElement, owner, this.options.selectionPolyfill);
 
             return selectionState;
         },
@@ -7146,13 +7163,13 @@ MediumEditor.extensions = {};
                         }
 
                         if (this.options.targetBlank || opts.target === '_blank') {
-                            MediumEditor.util.setTargetBlank(MediumEditor.selection.getSelectionStart(this.options.ownerDocument), opts.url);
+                            MediumEditor.util.setTargetBlank(MediumEditor.selection.getSelectionStart(this.options.ownerDocument, this.options.selectionPolyfill), opts.url);
                         } else {
-                            MediumEditor.util.removeTargetBlank(MediumEditor.selection.getSelectionStart(this.options.ownerDocument), opts.url);
+                            MediumEditor.util.removeTargetBlank(MediumEditor.selection.getSelectionStart(this.options.ownerDocument, this.options.selectionPolyfill), opts.url);
                         }
 
                         if (opts.buttonClass) {
-                            MediumEditor.util.addClassToAnchors(MediumEditor.selection.getSelectionStart(this.options.ownerDocument), opts.buttonClass);
+                            MediumEditor.util.addClassToAnchors(MediumEditor.selection.getSelectionStart(this.options.ownerDocument, this.options.selectionPolyfill), opts.buttonClass);
                         }
                     }
                 }
