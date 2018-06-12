@@ -5822,7 +5822,7 @@ MediumEditor.extensions = {};
                 };
 
             if (this.base.options.shadowRoot.Ua !== 'ShadyRoot' && this.base.options.shadowRoot.eb !== 'ShadyRoot' &&
-                this.base.options.shadowRoot.sa !== 'ShadyRoot' && this.options.shadowRoot.Oa !== 'ShadyRoot') {
+                this.base.options.shadowRoot.sa !== 'ShadyRoot' && this.base.options.shadowRoot.Oa !== 'ShadyRoot') {
                 selectionRange = MediumEditor.selection.getSelectionRange(this.base.options.shadowRoot);
             } else {
                 selectionRange = MediumEditor.selection.getSelectionRange(this.document);
@@ -5884,7 +5884,7 @@ MediumEditor.extensions = {};
                 selection = null;
 
             if (this.base.options.shadowRoot.Ua !== 'ShadyRoot' && this.base.options.shadowRoot.eb !== 'ShadyRoot' &&
-                this.base.options.shadowRoot.sa !== 'ShadyRoot' && this.options.shadowRoot.Oa !== 'ShadyRoot') {
+                this.base.options.shadowRoot.sa !== 'ShadyRoot' && this.base.options.shadowRoot.Oa !== 'ShadyRoot') {
                 selection = this.base.options.shadowRoot.getSelection();
             } else {
                 selection = this.window.getSelection();
