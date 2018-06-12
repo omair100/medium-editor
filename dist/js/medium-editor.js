@@ -7016,7 +7016,7 @@ MediumEditor.extensions = {};
         // Export the state of the selection in respect to one of this
         // instance of MediumEditor's elements
         exportSelection: function () {
-            var selectionElement = (this.options.shadowRoot.Ua !== 'ShadyRoot' && this.options.shadowRoot.eb !== 'ShadyRoot' && this.options.shadowRoot.sa !== 'ShadyRoot' && this.options.shadowRoot.Oa !== 'ShadyRoot') ? MediumEditor.selection.getSelectionElement(this.options.shadowRoot) : MediumEditor.selection.getSelectionElement(this.options.contentWindow),
+            var selectionElement = (this.options.shadowRoot.Ua !== 'ShadyRoot' && this.options.shadowRoot.eb !== 'ShadyRoot' && this.options.shadowRoot.sa !== 'ShadyRoot' && this.options.shadowRoot.Oa !== 'ShadyRoot') ? MediumEditor.selection.getSelectionElement(this.options.shadowRoot, this.options.selectionPolyfill) : MediumEditor.selection.getSelectionElement(this.options.contentWindow),
                 selectionState = null,
                 owner = (this.options.shadowRoot.Ua !== 'ShadyRoot' && this.options.shadowRoot.eb !== 'ShadyRoot' && this.options.shadowRoot.sa !== 'ShadyRoot' && this.options.shadowRoot.Oa !== 'ShadyRoot') ? this.options.shadowRoot : this.options.ownerDocument;
 
