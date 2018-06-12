@@ -6108,7 +6108,7 @@ MediumEditor.extensions = {};
     function handleDisableExtraSpaces(event) {
         var selectionDoc = (this.options.shadowRoot.Ua !== 'ShadyRoot' && this.options.shadowRoot.eb !== 'ShadyRoot' &&
             this.options.shadowRoot.sa !== 'ShadyRoot' && this.options.shadowRoot.Oa !== 'ShadyRoot') ? this.options.shadowRoot : this.options.ownerDocument,
-            node = MediumEditor.selection.getSelectionStart(selectionDoc),
+            node = MediumEditor.selection.getSelectionStart(selectionDoc, this.options.selectionPolyfill),
             textContent = node.textContent,
             selectionRange = selectionDoc.getSelection ? selectionDoc.getSelection().getRangeAt(0) : this.options.selectionPolyfill(selectionDoc).range,
             caretPositions = MediumEditor.selection.getCaretOffsets(node, selectionRange);
