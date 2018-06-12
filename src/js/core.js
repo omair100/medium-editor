@@ -4,8 +4,8 @@
     // Event handlers that shouldn't be exposed externally
 
     function handleDisableExtraSpaces(event) {
-        var selectionDoc = (this.options.shadowRoot.Ua !== 'ShadyRoot' && this.options.shadowRoot.eb !== 'ShadyRoot' 
-            && this.options.shadowRoot.sa !== 'ShadyRoot' && this.options.shadowRoot.Oa !== 'ShadyRoot') ? this.options.shadowRoot : this.options.ownerDocument,
+        var selectionDoc = (this.options.shadowRoot.Ua !== 'ShadyRoot' && this.options.shadowRoot.eb !== 'ShadyRoot' &&
+            this.options.shadowRoot.sa !== 'ShadyRoot' && this.options.shadowRoot.Oa !== 'ShadyRoot') ? this.options.shadowRoot : this.options.ownerDocument,
             node = MediumEditor.selection.getSelectionStart(selectionDoc),
             textContent = node.textContent,
             caretPositions = MediumEditor.selection.getCaretOffsets(node, selectionDoc.getSelection().getRangeAt(0));
