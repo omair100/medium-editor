@@ -57,8 +57,7 @@
             event.preventDefault();
             event.stopPropagation();
 
-            var selectionDoc = (this.base.options.shadowRoot.Ua !== 'ShadyRoot' && this.base.options.shadowRoot.eb !== 'ShadyRoot' &&
-                this.base.options.shadowRoot.sa !== 'ShadyRoot' && this.base.options.shadowRoot.Oa !== 'ShadyRoot') ? this.base.options.shadowRoot : this.document,
+            var selectionDoc = (this.base.options.shadowRoot.mode === 'open') ? this.base.options.shadowRoot : this.document,
                 range = MediumEditor.selection.getSelectionRange(selectionDoc, this.base.options.selectionPolyfill);
 
             if (range.startContainer.nodeName.toLowerCase() === 'a' ||

@@ -464,8 +464,7 @@
                     }
                 };
 
-            if (this.base.options.shadowRoot.Ua !== 'ShadyRoot' && this.base.options.shadowRoot.eb !== 'ShadyRoot' &&
-                this.base.options.shadowRoot.sa !== 'ShadyRoot' && this.base.options.shadowRoot.Oa !== 'ShadyRoot') {
+            if (this.base.options.shadowRoot.mode === 'open') {
                 selectionRange = MediumEditor.selection.getSelectionRange(this.base.options.shadowRoot, this.base.options.selectionPolyfill);
             } else {
                 selectionRange = MediumEditor.selection.getSelectionRange(this.document, this.base.options.selectionPolyfill);
@@ -526,8 +525,7 @@
             var container = this.base.getFocusedElement(),
                 selection = null;
 
-            if (this.base.options.shadowRoot.Ua !== 'ShadyRoot' && this.base.options.shadowRoot.eb !== 'ShadyRoot' &&
-                this.base.options.shadowRoot.sa !== 'ShadyRoot' && this.base.options.shadowRoot.Oa !== 'ShadyRoot') {
+            if (this.base.options.shadowRoot.mode === 'open') {
                 selection = this.base.options.shadowRoot.getSelection ? this.base.options.shadowRoot.getSelection()
                     : this.base.options.selectionPolyfill(this.base.options.shadowRoot);
             } else {

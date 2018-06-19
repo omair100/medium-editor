@@ -379,7 +379,7 @@
                 // Don't blur focused element if clicking on editor, toolbar, or anchorpreview
                 if (hadFocus && externalEvent) {
                     //console.log(selection);
-                    if (this.options.shadowRoot.Ua !== 'ShadyRoot' && this.options.shadowRoot.eb !== 'ShadyRoot' && this.options.shadowRoot.sa !== 'ShadyRoot' && this.options.shadowRoot.Oa !== 'ShadyRoot') {
+                    if (this.options.shadowRoot.mode === 'open') {
                         setTimeout(function () {
                             var selection = (this.options.shadowRoot.getSelection) ?
                                                 this.options.shadowRoot.getSelection() : this.options.selectionPolyfill(this.options.shadowRoot);

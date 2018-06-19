@@ -4,8 +4,7 @@
     // Event handlers that shouldn't be exposed externally
 
     function handleDisableExtraSpaces(event) {
-        var selectionDoc = (this.options.shadowRoot.Ua !== 'ShadyRoot' && this.options.shadowRoot.eb !== 'ShadyRoot' &&
-            this.options.shadowRoot.sa !== 'ShadyRoot' && this.options.shadowRoot.Oa !== 'ShadyRoot') ? this.options.shadowRoot : this.options.ownerDocument,
+        var selectionDoc = (this.options.shadowRoot.mode === 'open') ? this.options.shadowRoot : this.options.ownerDocument,
             node = MediumEditor.selection.getSelectionStart(selectionDoc, this.options.selectionPolyfill),
             textContent = node.textContent,
             selectionRange = selectionDoc.getSelection ? selectionDoc.getSelection().getRangeAt(0) : this.options.selectionPolyfill(selectionDoc).range,
@@ -140,14 +139,14 @@
             // when cursor is at the begining of the element and the element is <blockquote>
             // then pressing backspace key should change the <blockquote> to a <p> tag
             event.preventDefault();
-            var selectionDoc = (this.options.shadowRoot.Ua !== 'ShadyRoot' && this.options.shadowRoot.eb !== 'ShadyRoot' && this.options.shadowRoot.sa !== 'ShadyRoot' && this.options.shadowRoot.Oa !== 'ShadyRoot') ? this.options.shadowRoot : this.options.ownerDocument;
+            var selectionDoc = (this.options.shadowRoot.mode === 'open') ? this.options.shadowRoot : this.options.ownerDocument;
             MediumEditor.util.execFormatBlock(this.options.ownerDocument, 'p', selectionDoc, this.options.selectionPolyfill);
         }
     }
 
     function handleKeyup(event) {
 
-        var selectionDoc = (this.options.shadowRoot.Ua !== 'ShadyRoot' && this.options.shadowRoot.eb !== 'ShadyRoot' && this.options.shadowRoot.sa !== 'ShadyRoot' && this.options.shadowRoot.Oa !== 'ShadyRoot') ? this.options.shadowRoot : this.options.ownerDocument,
+        var selectionDoc = (this.options.shadowRoot.mode === 'open') ? this.options.shadowRoot : this.options.ownerDocument,
             node = MediumEditor.selection.getSelectionStart(selectionDoc, this.options.selectionPolyfill),
             tagName;
 
@@ -510,7 +509,7 @@
         // type of block element (ie append-blockquote, append-h1, append-pre, etc.)
         match = appendAction.exec(action);
         if (match) {
-            var selectionDoc = (this.options.shadowRoot.Ua !== 'ShadyRoot' && this.options.shadowRoot.eb !== 'ShadyRoot' && this.options.shadowRoot.sa !== 'ShadyRoot' && this.options.shadowRoot.Oa !== 'ShadyRoot') ? this.options.shadowRoot : this.options.ownerDocument;
+            var selectionDoc = (this.options.shadowRoot.mode === 'open') ? this.options.shadowRoot : this.options.ownerDocument;
 
             return MediumEditor.util.execFormatBlock(this.options.ownerDocument, match[1], selectionDoc, this.options.selectionPolyfill);
         }
@@ -914,9 +913,9 @@
         // Export the state of the selection in respect to one of this
         // instance of MediumEditor's elements
         exportSelection: function () {
-            var selectionElement = (this.options.shadowRoot.Ua !== 'ShadyRoot' && this.options.shadowRoot.eb !== 'ShadyRoot' && this.options.shadowRoot.sa !== 'ShadyRoot' && this.options.shadowRoot.Oa !== 'ShadyRoot') ? MediumEditor.selection.getSelectionElement(this.options.shadowRoot, this.options.selectionPolyfill) : MediumEditor.selection.getSelectionElement(this.options.contentWindow),
+            var selectionElement = (this.options.shadowRoot.mode === 'open') ? MediumEditor.selection.getSelectionElement(this.options.shadowRoot, this.options.selectionPolyfill) : MediumEditor.selection.getSelectionElement(this.options.contentWindow),
                 selectionState = null,
-                owner = (this.options.shadowRoot.Ua !== 'ShadyRoot' && this.options.shadowRoot.eb !== 'ShadyRoot' && this.options.shadowRoot.sa !== 'ShadyRoot' && this.options.shadowRoot.Oa !== 'ShadyRoot') ? this.options.shadowRoot : this.options.ownerDocument;
+                owner = (this.options.shadowRoot.mode === 'open') ? this.options.shadowRoot : this.options.ownerDocument;
 
             selectionState = MediumEditor.selection.exportSelection(selectionElement, owner, this.options.selectionPolyfill);
 
