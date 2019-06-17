@@ -68,6 +68,6 @@
     "start": "open ./demo/index.html"
   },
   "dependencies": {
-    "node-sass": "4.9.0"
+    "node-sass": "4.12.0"
   }
 }
